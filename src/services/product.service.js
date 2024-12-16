@@ -75,7 +75,7 @@ const list = async (filter = {}) => {
 }
 
 const getProduct = async (id) => {
-    let product = await Product.findById(id)
+    let product = await Product.findById(id).populate("categories").populate("tags").populate("variants.images")
 
     if(!product) throw new NotFoundError("Product is not found")
 
