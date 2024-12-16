@@ -2,6 +2,7 @@ const { default: mongoose } = require("mongoose")
 const Order = require("../models/Order.model")
 const { Product } = require("../models/Product.model")
 const { NotFoundError, BadRequestError } = require("../utils/error.utils")
+const User = require("../models/User.model")
 
 const list = async (id) => {
     let result = await Order.find({ userId: id }).sort({ createdAt: -1 }).populate("list.product")
@@ -79,6 +80,8 @@ const create = async (user, params) => {
     })
 
     await orderGroup.save()
+
+    await User.updateOne({ _id: user._id }, { $inc: { balance: -payAmount } });
 
     let result = orderGroup.toObject();
     delete result.userId;
