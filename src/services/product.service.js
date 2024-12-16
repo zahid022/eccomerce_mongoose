@@ -1,4 +1,5 @@
 const {Product} = require("../models/Product.model")
+const { findById } = require("../models/User.model")
 const { NotFoundError, ValidationError } = require("../utils/error.utils")
 const generateSlug = require("../utils/slug.utils")
 
@@ -73,6 +74,14 @@ const list = async (filter = {}) => {
     }
 }
 
+const getProduct = async (id) => {
+    let product = await Product.findById(id)
+
+    if(!product) throw new NotFoundError("Product is not found")
+
+    return product
+}
+
 const create = async (params) => {
     params.slug = params.slug || generateSlug(params.title)
 
@@ -140,6 +149,7 @@ const deleteProduct = async (id) => {
 
 const productService = {
     list,
+    getProduct,
     create,
     upsert,
     update,

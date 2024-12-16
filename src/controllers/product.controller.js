@@ -9,6 +9,15 @@ const list = async (req, res, next) => {
     }
 }
 
+const getProduct = async (req, res, next) => {
+    try {
+        let result = await productService.getProduct(req.params.id)
+        res.json(result)
+    } catch (err) {
+        next(err)
+    }
+}
+
 const create = async (req, res, next) => {
     try {
         let result = await productService.create(req.body)
@@ -47,6 +56,7 @@ const deleteProduct = async (req, res, next) => {
 
 const productController = {
     list,
+    getProduct,
     create,
     upsert,
     update,
