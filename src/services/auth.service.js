@@ -2,6 +2,9 @@ const User = require("../models/User.model")
 const { ConflictError, NotFoundError } = require("../utils/error.utils")
 const bcrypt = require("bcrypt")
 const { encode } = require("../utils/jwt.utils")
+const renderTemplate = require("../utils/template.utils")
+const config = require("../config")
+const { sendMail } = require("../utils/mail.utils")
 
 const login = async (params) => {
     let user = await User.findOne({ email: params.email }).lean()
@@ -10,7 +13,7 @@ const login = async (params) => {
     let checkPassword = await bcrypt.compare(params.password, user.password)
 
     if (!checkPassword) throw new NotFoundError("Email or password is wrong")
-
+        
     let token = encode({ userId: user._id })
 
     delete user.password
@@ -29,20 +32,23 @@ const register = async (params) => {
 
     await user.save()
 
+    const content = await renderTemplate("welcome-email", {
+        firstname: user.firstName,
+        websiteUrl: config.websiteURL
+    })
+
+    sendMail(config.smtp.from, user.email, "Welcome our application", content)
+
+    user.password = undefined;
+
     return user
 }
 
-const update = async (id, params) => {
-    let user = await User.findByIdAndUpdate(id, params, { new: true }).lean()
-    delete user.password
-    return user
-}
 
 
 const authService = {
     register,
-    login,
-    update
+    login
 }
 
 module.exports = authService

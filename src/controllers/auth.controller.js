@@ -18,19 +18,9 @@ const register = async (req, res, next) => {
     }
 }
 
-const update = async (req, res, next) => {
-    try {
-        let result = await authService.update(req.user._id, req.body)
-        res.json(result)
-    } catch (err) {
-        next(err)
-    }
-}
-
 const authController = {
     login,
-    register,
-    update
+    register
 }
 
 module.exports = authController
