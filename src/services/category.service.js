@@ -5,6 +5,12 @@ const generateSlug = require("../utils/slug.utils")
 const categories = async () => {
     let list = await Category.find().sort({ order: 1 }).lean()
 
+    return list
+}
+
+const nestedList = async () => {
+    let list = await Category.find().sort({ order: 1 }).lean()
+
     let result = list
         .filter(item => !item.parentId)
         .map(item => subCategories(list, item))
@@ -61,6 +67,7 @@ const deleteCategory = async (id) => {
 
 const categoryService = {
     categories,
+    nestedList,
     create,
     update,
     deleteCategory

@@ -1,5 +1,14 @@
 const categoryService = require("../services/category.service")
 
+const nestedList = async (req, res, next) => {
+    try {
+        let result = await categoryService.nestedList()
+        res.json(result)
+    } catch (err) {
+        next(err)
+    }
+}
+
 const categories = async (req, res, next) => {
     try {
         let result = await categoryService.categories()
@@ -39,6 +48,7 @@ const deleteCategory = async (req, res, next) => {
 
 const categroyController = {
     categories,
+    nestedList,
     create,
     update,
     deleteCategory
