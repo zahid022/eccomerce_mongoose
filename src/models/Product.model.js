@@ -86,12 +86,12 @@ const productSchema = new Schema({
     },
     details: {
         type: [String],
-        required: true
+        default : []
     },
     tags: {
         type: [Schema.Types.ObjectId],
-        required: true,
-        ref: "Tag"
+        ref: "Tag",
+        default : []
     },
     specs: [specSchema],
     variants: [variantSchema]

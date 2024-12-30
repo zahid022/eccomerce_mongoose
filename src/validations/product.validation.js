@@ -25,9 +25,9 @@ const create = Joi.object({
     title: Joi.string().trim().required().min(3),
     slug: Joi.string().trim().optional().pattern(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).min(3),
     categories: Joi.array().items(Joi.string()).required(),
-    tags: Joi.array().items(Joi.string()).required(),
+    tags: Joi.array().items(Joi.string()).optional(),
     description: Joi.string().required().trim().min(3),
-    details: Joi.array().items(Joi.string()).required(),
+    details: Joi.array().items(Joi.string()).optional(),
     specs: Joi.array()
         .items(
             Joi.object({
