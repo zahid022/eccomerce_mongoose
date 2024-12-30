@@ -1,6 +1,6 @@
-const {Product} = require("../models/Product.model")
+const { Product } = require("../models/Product.model")
 const { findById } = require("../models/User.model")
-const { NotFoundError, ValidationError } = require("../utils/error.utils")
+const { NotFoundError, ValidationError, ConflictError } = require("../utils/error.utils")
 const generateSlug = require("../utils/slug.utils")
 
 const list = async (filter = {}) => {
@@ -8,49 +8,49 @@ const list = async (filter = {}) => {
 
     let where = {}
 
-    if(filter.categories){
+    if (filter.categories) {
         where.categories = {
-            $in : filter.categories
+            $in: filter.categories
         }
     }
 
-    if(filter.search){
+    if (filter.search) {
         where.$and = [
             {
-                $or : [
+                $or: [
                     {
-                        title : {$regex : filter.search, $optios : "i"}
+                        title: { $regex: filter.search, $optios: "i" }
                     },
                     {
-                        description : {$regex : filter.search, $optios : "i"}
+                        description: { $regex: filter.search, $optios: "i" }
                     }
                 ]
             }
         ]
     }
 
-    for(let [key,value] of Object.entries(filter)){
-        if(["categories", "search", "page", "limit"].includes(key)) continue
-        if(value[0] === "["){
+    for (let [key, value] of Object.entries(filter)) {
+        if (["categories", "search", "page", "limit"].includes(key)) continue
+        if (value[0] === "[") {
             let [min, max] = value.slice(1, -1).split(",").map(item => +item.trim())
 
             where[`variants.${key}`] = {
-                $lte : max,
-                $gte : min
+                $lte: max,
+                $gte: min
             }
-        }else if(value[0] === '<'){
+        } else if (value[0] === '<') {
             where[`variants.${key}`] = {
-                $lte : value.slice(1)
+                $lte: value.slice(1)
             }
-        }else if(value[0] === '>'){
+        } else if (value[0] === '>') {
             where[`variants.${key}`] = {
-                $gte : value.slice(1)
+                $gte: value.slice(1)
             }
-        }else if(value.includes(",")){
+        } else if (value.includes(",")) {
             where[`variants.${key}`] = {
-                $in : value.split(",").map(item => item.trim())
+                $in: value.split(",").map(item => item.trim())
             }
-        }else{
+        } else {
             where[`variants.${key}`] = value
         }
     }
@@ -68,8 +68,8 @@ const list = async (filter = {}) => {
 
     return {
         total,
-        limit : filter.limit || 10,
-        page : filter.page || 1,
+        limit: filter.limit || 10,
+        page: filter.page || 1,
         products
     }
 }
@@ -77,7 +77,7 @@ const list = async (filter = {}) => {
 const getProduct = async (id) => {
     let product = await Product.findById(id).populate("categories").populate("tags").populate("variants.images")
 
-    if(!product) throw new NotFoundError("Product is not found")
+    if (!product) throw new NotFoundError("Product is not found")
 
     return product
 }
@@ -127,19 +127,44 @@ const upsert = async (id, params) => {
 }
 
 const update = async (id, params) => {
-    if(params.title){
-        params.slug = params.slug || generateSlug(params.title)
-    }
-    const product = await Product.findById(id)
-
-    for(let [key, value] of Object.entries(params)){
-        product[key] = value
+    if (params.title) {
+        params.slug = params.slug || generateSlug(params.title);
     }
 
-    product.save()
+    const product = await Product.findById(id);
+    if (!product) throw new NotFoundError("Product is not found");
 
-    return product
-}
+    if (params.specs) {
+        params.specs.forEach(newSpec => {
+            const existingSpec = product.specs.find(
+                spec => spec.key.toString().toLowerCase() === newSpec.key.toString().toLowerCase()
+            );
+
+            if (existingSpec) {
+                newSpec.values.forEach(newValue => {
+                    const duplicateValue = existingSpec.values.find(
+                        value => value.key.toString().toLowerCase() === newValue.key.toString().toLowerCase()
+                    );
+                    if (duplicateValue) {
+                        throw new ConflictError(`Duplicate value key found: ${newValue.key}`)
+                    }
+                    existingSpec.values.push(newValue);
+                });
+            } else {
+                product.specs.push(newSpec);
+            }
+        });
+        delete params.specs;
+    }
+
+    for (let [key, value] of Object.entries(params)) {
+        product[key] = value;
+    }
+
+    await product.save();
+
+    return product;
+};
 
 const deleteProduct = async (id) => {
     await Product.findByIdAndDelete(id)
