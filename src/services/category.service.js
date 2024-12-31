@@ -29,6 +29,14 @@ const subCategories = (list, category) => {
     }
 }
 
+const category = async (id) => {
+    let category = await Category.findById(id)
+
+    if(!category) throw new NotFoundError("Category is not found")
+
+    return category
+}
+
 const create = async (params) => {
     params.slug = params.slug || generateSlug(params.name)
 
@@ -68,6 +76,7 @@ const deleteCategory = async (id) => {
 const categoryService = {
     categories,
     nestedList,
+    category,
     create,
     update,
     deleteCategory

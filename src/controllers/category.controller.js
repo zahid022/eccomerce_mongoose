@@ -18,6 +18,15 @@ const categories = async (req, res, next) => {
     }
 }
 
+const category = async (req, res, next) => {
+    try {
+        let result = await categoryService.category(req.params.id)
+        res.json(result)
+    } catch (err) {
+        next(err)
+    }
+}
+
 const create = async (req, res, next) => {
     try {
         let result = await categoryService.create(req.body)
@@ -49,6 +58,7 @@ const deleteCategory = async (req, res, next) => {
 const categroyController = {
     categories,
     nestedList,
+    category,
     create,
     update,
     deleteCategory
