@@ -8,6 +8,6 @@ const authRouter = Router()
 
 authRouter.post("/register", validationMiddleware(authValidation.register), authController.register)
 authRouter.post("/login", validationMiddleware(authValidation.login), authController.login)
-authRouter.get("/check", authMiddleware('admin'), authController.check)
+authRouter.get("/check", authMiddleware, authController.check)
 
 module.exports = authRouter
