@@ -18,9 +18,22 @@ const register = async (req, res, next) => {
     }
 }
 
+const check = async (req, res, next) => {
+    try {
+        let result = false
+        if(req.user) {
+            result = req.user
+        }
+        res.json(result)
+    } catch (err) {
+        next(err)
+    }
+}
+
 const authController = {
     login,
-    register
+    register,
+    check
 }
 
 module.exports = authController
