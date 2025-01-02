@@ -23,6 +23,8 @@ const check = async (req, res, next) => {
         let result = false
         if(req.user) {
             result = req.user
+
+            delete result.password
         }
         res.json(result)
     } catch (err) {
