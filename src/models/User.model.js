@@ -1,6 +1,41 @@
 const {Schema, model} = require("mongoose")
 const bcrypt = require("bcrypt")
 
+const userProfile = new Schema({
+    addressTitle : {
+        type : String,
+        default : ''
+    },
+    country : {
+        type : String,
+        default : ''
+    },
+    street : {
+        type : String,
+        default : ''
+    },
+    city : {
+        type : String,
+        default : ''
+    },
+    postalCode : {
+        type : String,
+        default : ''
+    },
+    gender : {
+        type : String,
+        enum : ["male", "female"]
+    },
+    state : {
+        type : String,
+        default : ''
+    },
+    phone : {
+        type : String,
+        default : ''
+    }
+})
+
 const userSchema = new Schema({
     firstName : {
         type : String,
@@ -22,39 +57,18 @@ const userSchema = new Schema({
         type : String,
         required : true
     },
-    addressTitle : {
-        type : String
-    },
-    country : {
-        type : String
-    },
-    street : {
-        type : String
-    },
-    city : {
-        type : String
-    },
-    postalCode : {
-        type : String
-    },
-    gender : {
-        type : String,
-        enum : ["male", "female"]
-    },
     role : {
         type : String,
         enum : ["admin", "user"],
         default : "user"
     },
-    state : {
-        type : String
-    },
     balance : {
         type : Number,
         default : 0
     },
-    phone : {
-        type : String
+    profile: {
+        type: userProfile,
+        default: {}
     }
 }, {timestamps : true})
 

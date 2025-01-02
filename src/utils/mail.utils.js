@@ -8,7 +8,8 @@ const transporter = nodeMailer.createTransport({
     auth : {
         user : config.smtp.user,
         pass : config.smtp.pass
-    }
+    },
+    connectionTimeout: 10000 
 })
 
 const sendMail = (from, to, subject, content) => {
