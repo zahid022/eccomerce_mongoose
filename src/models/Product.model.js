@@ -19,7 +19,8 @@ const specSchema = new Schema({
                 trim: true
             },
             value: {
-                type: String,
+                type: Schema.Types.ObjectId,
+                ref : "Image",
                 required: true,
                 trim: true
             }

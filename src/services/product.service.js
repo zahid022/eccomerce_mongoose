@@ -1,5 +1,4 @@
 const { Product } = require("../models/Product.model")
-const { findById } = require("../models/User.model")
 const { NotFoundError, ValidationError, ConflictError } = require("../utils/error.utils")
 const generateSlug = require("../utils/slug.utils")
 
@@ -61,6 +60,7 @@ const list = async (filter = {}) => {
     query.populate("categories")
     query.populate("tags")
     query.populate("variants.images")
+    query.populate("specs.values.value")
 
     let products = await query
 
@@ -75,7 +75,7 @@ const list = async (filter = {}) => {
 }
 
 const getProduct = async (id) => {
-    let product = await Product.findById(id).populate("categories").populate("tags").populate("variants.images")
+    let product = await Product.findById(id).populate("categories").populate("tags").populate("variants.images").populate("specs.values.value")
 
     if (!product) throw new NotFoundError("Product is not found")
 
