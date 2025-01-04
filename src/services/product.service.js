@@ -13,6 +13,12 @@ const list = async (filter = {}) => {
         }
     }
 
+    if (filter.tags) {
+        where.tags = {
+            $in: filter.tags
+        }
+    }
+
     if (filter.search) {
         where.$and = [
             {
@@ -29,7 +35,7 @@ const list = async (filter = {}) => {
     }
 
     for (let [key, value] of Object.entries(filter)) {
-        if (["categories", "search", "page", "limit"].includes(key)) continue
+        if (["categories", "search","tags", "page", "limit"].includes(key)) continue
         if (value[0] === "[") {
             let [min, max] = value.slice(1, -1).split(",").map(item => +item.trim())
 

@@ -13,6 +13,18 @@ const list = Joi.object({
             return categories;
         })
         .message("Categories ids are not valid"),
+    tags: Joi.string()
+        .custom((value, helpers) => {
+            let check = /^([0-9a-fA-F]{24})(,\s*[0-9a-fA-F]{24})*$/.test(value);
+            if (!check) return helpers.message("Tag ids are not valid");
+
+            let tags = value
+                ?.split(",")
+                .map((item) => item?.trim())
+                .filter((item) => item);
+            return tags;
+        })
+        .message("Tags ids are not valid"),
     "specs.color": Joi.string().optional(),
     "speecs.size": Joi.string().optional(),
     price: Joi.string().optional(),
