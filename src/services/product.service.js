@@ -111,9 +111,24 @@ const upsert = async (id, params) => {
         })
     })
 
+    let newVarinat = null
+
+    if (!checkVariant) {
+        newVarinat = product.variants.find(variant => {
+            return Object.entries(Object.fromEntries(variant.specs)).some(([key, value]) => {
+                return params.specs[key] === value
+            })
+        })
+    }
+
+    if(newVarinat){
+        params.images = newVarinat.images
+    }
+
     params.slug = params.slug || generateSlug(`${Object.values(params.specs).join("-")}`)
 
     if (checkVariant) {
+        params.images = checkVariant.images
         for (let [key, value] of Object.entries(params)) {
             checkVariant[key] = value
         }
