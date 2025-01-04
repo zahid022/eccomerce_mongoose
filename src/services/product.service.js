@@ -18,10 +18,10 @@ const list = async (filter = {}) => {
             {
                 $or: [
                     {
-                        title: { $regex: filter.search, $optios: "i" }
+                        title: { $regex: filter.search, $options: "i" }
                     },
                     {
-                        description: { $regex: filter.search, $optios: "i" }
+                        description: { $regex: filter.search, $options: "i" }
                     }
                 ]
             }
