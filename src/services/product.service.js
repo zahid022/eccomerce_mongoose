@@ -121,7 +121,7 @@ const upsert = async (id, params) => {
         })
     }
 
-    if(newVarinat){
+    if (newVarinat && !params.images) {
         params.images = newVarinat.images
     }
 
