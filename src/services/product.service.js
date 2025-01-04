@@ -113,15 +113,15 @@ const upsert = async (id, params) => {
 
     let newVarinat = null
 
-    if (!checkVariant) {
+    if (!checkVariant && params.specs.color) {
         newVarinat = product.variants.find(variant => {
             return Object.entries(Object.fromEntries(variant.specs)).some(([key, value]) => {
-                return params.specs[key] === value
+                return params.specs.color === value
             })
         })
     }
-
-    if (newVarinat && !params.images) {
+    
+    if (newVarinat && params.images.length === 0) {    
         params.images = newVarinat.images
     }
 
