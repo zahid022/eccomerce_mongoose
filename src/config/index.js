@@ -13,6 +13,7 @@ module.exports = {
     cloudNAME: process.env.CLOUDINARY_CLOUD_NAME,
     cloudKey: process.env.CLOUDINARY_API_KEY,
     cloudSECRET : process.env.CLOUDINARY_API_SECRET,
+    countryURL : process.env.COUNTRY_WEBSITE,
     smtp : {
         host : process.env.SMTP_HOST,
         port : +process.env.SMTP_PORT || 587,

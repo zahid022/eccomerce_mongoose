@@ -8,6 +8,7 @@ const cartRouter = require("./cart.router")
 const orderRouter = require("./Order.router")
 const userRouter = require("./user.router")
 const forgetPasswordRouter = require("./forgetPassword.router")
+const countryRouter = require("./country.router")
 
 const router = Router()
 
@@ -20,5 +21,6 @@ router.use("/upload", uploadRouter)
 router.use("/product", productRouter)
 router.use("/cart", cartRouter)
 router.use("/order", orderRouter)
+router.use("/country", countryRouter)
 
 module.exports = router
