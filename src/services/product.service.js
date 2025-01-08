@@ -35,7 +35,7 @@ const list = async (filter = {}) => {
     }
 
     for (let [key, value] of Object.entries(filter)) {
-        if (["categories", "search","tags", "page", "limit"].includes(key)) continue
+        if (["categories", "search", "tags", "page", "limit"].includes(key)) continue
         if (value[0] === "[") {
             let [min, max] = value.slice(1, -1).split(",").map(item => +item.trim())
 
@@ -87,6 +87,14 @@ const getProduct = async (id) => {
     return product
 }
 
+const getBySlug = async (slug) => {
+    let product = await Product.findOne({ slug }).populate("categories").populate("tags").populate("variants.images")
+
+    if (!product) throw new NotFoundError("Product is not found")
+
+    return product
+}
+
 const create = async (params) => {
     params.slug = params.slug || generateSlug(params.title)
 
@@ -126,8 +134,8 @@ const upsert = async (id, params) => {
             })
         })
     }
-    
-    if (newVarinat && params.images.length === 0) {    
+
+    if (newVarinat && params.images.length === 0) {
         params.images = newVarinat.images
     }
 
@@ -195,6 +203,7 @@ const deleteProduct = async (id) => {
 const productService = {
     list,
     getProduct,
+    getBySlug,
     create,
     upsert,
     update,
