@@ -1,11 +1,16 @@
 const Cart = require("../models/Cart.model")
-const {Product} = require("../models/Product.model")
+const { Product } = require("../models/Product.model")
 const { NotFoundError, BadRequestError } = require("../utils/error.utils")
 
 const list = async (id) => {
-    let cart = await Cart.findOne({ userId: id }).lean().populate("list.productId")
+    let cart = await Cart.findOne({ userId: id }).populate({
+        path: "list.productId",
+        populate: {
+            path: "variants.images",
+        },
+    }).lean()
 
-    let result = {...cart, userId : undefined}
+    let result = { ...cart, userId: undefined }
 
     return result || []
 }
@@ -74,13 +79,13 @@ const create = async (id, params) => {
 }
 
 const deleteItem = async (userId, id) => {
-    let cart = await Cart.findOne({userId : userId})
+    let cart = await Cart.findOne({ userId: userId })
 
-    if(!cart) throw new BadRequestError("Your cart is empty")
+    if (!cart) throw new BadRequestError("Your cart is empty")
 
     let result = cart.list.filter(item => item._id.toString() !== id)
 
-    if(result.length === cart.list.length) {
+    if (result.length === cart.list.length) {
         throw new NotFoundError("Product is not found in your cart")
     }
 
