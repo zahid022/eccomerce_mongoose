@@ -3,11 +3,10 @@ const Order = require("../models/Order.model")
 const { Product } = require("../models/Product.model")
 const { NotFoundError, BadRequestError } = require("../utils/error.utils")
 const User = require("../models/User.model")
-const Cart = require("../models/Cart.model")
 const cartService = require("./cart.service")
 
 const list = async (id) => {
-    let result = await Order.find({ userId: id }).sort({ createdAt: -1 }).populate("list.product")
+    let result = await Order.find({ userId: id }).sort({ createdAt: -1 }).populate('list.product').populate('list.variant.images')
 
     return result || []
 }
