@@ -22,16 +22,9 @@ const list = async (filter = {}) => {
     if (filter.search) {
         where.$and = [
             {
-                $or: [
-                    {
-                        title: { $regex: filter.search, $options: "i" }
-                    },
-                    {
-                        description: { $regex: filter.search, $options: "i" }
-                    }
-                ]
+                title: { $regex: filter.search, $options: "i" }
             }
-        ]
+        ];
     }
 
     for (let [key, value] of Object.entries(filter)) {
