@@ -3,6 +3,8 @@ const Order = require("../models/Order.model")
 const { Product } = require("../models/Product.model")
 const { NotFoundError, BadRequestError } = require("../utils/error.utils")
 const User = require("../models/User.model")
+const Cart = require("../models/Cart.model")
+const cartService = require("./cart.service")
 
 const list = async (id) => {
     let result = await Order.find({ userId: id }).sort({ createdAt: -1 }).populate("list.product")
@@ -58,6 +60,7 @@ const create = async (user, params) => {
 
         return {
             product: product._id,
+            product_name: product.title,
             variant: variant,
             price: variant.price,
             count: item.count
@@ -82,6 +85,8 @@ const create = async (user, params) => {
     await orderGroup.save()
 
     await User.updateOne({ _id: user._id }, { $inc: { balance: -payAmount } });
+
+    await cartService.deleteUserCart(user._id)
 
     let result = orderGroup.toObject();
     delete result.userId;

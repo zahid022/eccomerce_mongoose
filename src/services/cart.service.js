@@ -96,10 +96,15 @@ const deleteItem = async (userId, id) => {
     return cart
 }
 
+const deleteUserCart = async (userId) => {
+    await Cart.findOneAndDelete({userId})
+}
+
 const cartService = {
     list,
     create,
-    deleteItem
+    deleteItem,
+    deleteUserCart
 }
 
 module.exports = cartService
