@@ -29,8 +29,8 @@ const list = Joi.object({
     "speecs.size": Joi.string().optional(),
     price: Joi.string().optional(),
     search: Joi.string().optional(),
-    page: Joi.string().optional().default(1),
-    limit: Joi.string().optional().default(10)
+    page: Joi.string().optional().default(1).min(1),
+    limit: Joi.string().optional().default(10).min(1)
 })
 
 const create = Joi.object({

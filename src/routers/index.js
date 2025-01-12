@@ -9,6 +9,7 @@ const orderRouter = require("./Order.router")
 const userRouter = require("./user.router")
 const forgetPasswordRouter = require("./forgetPassword.router")
 const countryRouter = require("./country.router")
+const commentRouter = require("./comment.router")
 
 const router = Router()
 
@@ -22,5 +23,6 @@ router.use("/product", productRouter)
 router.use("/cart", cartRouter)
 router.use("/order", orderRouter)
 router.use("/country", countryRouter)
+router.use("/comment", commentRouter)
 
 module.exports = router
