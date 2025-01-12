@@ -26,6 +26,7 @@ const getCommentByProduct = async (productId, page = 1) => {
     const limit = 5
     const skip = (page - 1) * limit;
 
+    const total = await Comment.countDocuments({ productId });
     const comments = await Comment.find({ productId })
         .populate({
             path: 'userId',
@@ -34,7 +35,10 @@ const getCommentByProduct = async (productId, page = 1) => {
         .limit(limit)
         .skip(skip);
 
-    return comments || [];
+    return {
+        total,
+        comments: comments || [],
+    };
 };
 
 const commentService = {
