@@ -21,9 +21,9 @@ transporter.verify(function (error, success) {
     }
 });
 
-const sendMail = (from, to, subject, content) => {
+const sendMail = async (from, to, subject, content) => {
     try {
-        let result = transporter.sendMail({
+        let result = await transporter.sendMail({
             from,
             to,
             subject,
