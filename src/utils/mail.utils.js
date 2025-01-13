@@ -9,11 +9,8 @@ const transporter = nodeMailer.createTransport({
         user: config.smtp.user,
         pass: config.smtp.pass
     },
-    tls: {
-        rejectUnauthorized: false,  // Sertifika doğrulama hatalarını görmezden gelir
-    },
-    connectionTimeout: 30000, // 30 saniye
-    socketTimeout: 30000,     // 30 saniye
+    connectionTimeout: 60000, // 60 saniye
+    socketTimeout: 60000, // 60 saniye
 })
 
 transporter.verify(function (error, success) {
