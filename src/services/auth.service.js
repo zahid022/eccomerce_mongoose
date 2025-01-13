@@ -37,7 +37,7 @@ const register = async (params) => {
         websiteUrl: config.websiteURL
     })
 
-    sendMail(config.smtp.from, user.email, "Welcome our application", content)
+    await sendMail(config.smtp.from, user.email, "Welcome our application", content)
 
     user.password = undefined;
 
