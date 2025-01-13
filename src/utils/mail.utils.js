@@ -12,6 +12,14 @@ const transporter = nodeMailer.createTransport({
     connectionTimeout: 10000 
 })
 
+transporter.verify(function (error, success) {
+    if (error) {
+      console.log("SMTP bağlantı hatası:", error);
+    } else {
+      console.log("SMTP bağlantısı başarılı!");
+    }
+  });
+
 const sendMail = (from, to, subject, content) => {
     try {
         let result = transporter.sendMail({
