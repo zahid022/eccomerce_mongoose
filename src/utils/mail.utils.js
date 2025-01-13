@@ -2,24 +2,27 @@ const nodeMailer = require("nodemailer")
 const config = require("../config")
 
 const transporter = nodeMailer.createTransport({
-    host : config.smtp.host,
-    port : config.smtp.port,
-    secure : config.smtp.secure,
-    auth : {
-        user : config.smtp.user,
-        pass : config.smtp.pass
+    host: config.smtp.host,
+    port: config.smtp.port,
+    secure: config.smtp.secure,
+    auth: {
+        user: config.smtp.user,
+        pass: config.smtp.pass
     },
-    // connectionTimeout: 20000, 
-    // socketTimeout: 20000,
+    tls: {
+        rejectUnauthorized: false,  // Sertifika doğrulama hatalarını görmezden gelir
+    },
+    connectionTimeout: 30000, // 30 saniye
+    socketTimeout: 30000,     // 30 saniye
 })
 
 transporter.verify(function (error, success) {
     if (error) {
-      console.log("SMTP bağlantı hatası:", error);
+        console.log("SMTP bağlantı hatası:", error);
     } else {
-      console.log("SMTP bağlantısı başarılı!");
+        console.log("SMTP bağlantısı başarılı!");
     }
-  });
+});
 
 const sendMail = (from, to, subject, content) => {
     try {
@@ -27,7 +30,7 @@ const sendMail = (from, to, subject, content) => {
             from,
             to,
             subject,
-            html : content
+            html: content
         })
         return result
     } catch (err) {
