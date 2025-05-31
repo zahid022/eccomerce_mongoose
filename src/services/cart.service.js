@@ -39,7 +39,7 @@ const create = async (id, params) => {
             let variantCheck = cart.list.find(item => item.variantId.toString() === params.list.variantId)
 
             if (variantCheck) {
-                variantCheck.count = params.list.count
+                variantCheck.count += params.list.count
                 variantCheck.price = params.list.price
                 variantCheck.discount = params.list.discount
             } else {
